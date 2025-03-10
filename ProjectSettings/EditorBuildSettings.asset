@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/3DChicken.unity
+    guid: a795101e49214604a9a39d7ce0f66f6b
   m_configObjects: {}
