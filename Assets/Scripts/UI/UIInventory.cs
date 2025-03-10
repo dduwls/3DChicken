@@ -22,6 +22,7 @@ public class UIInventory : MonoBehaviour
     private bool canDrop;
 
     private int curEquipIndex;
+    private int selectedIndex = 0;
 
     private PlayerController controller;
     private PlayerCondition condition;
@@ -45,6 +46,8 @@ public class UIInventory : MonoBehaviour
         }
 
         ClearSelectedItemWindow();
+
+        SelectItem(0);
     }
 
     void ClearSelectedItemWindow()
@@ -56,6 +59,26 @@ public class UIInventory : MonoBehaviour
 
         selectedItemText.text = string.Empty;
         selectedItemStat.text = string.Empty;
+    }
+
+    void Update()
+    {
+        if (Keyboard.current.digit1Key.wasPressedThisFrame) SelectItem(0);
+        if (Keyboard.current.digit2Key.wasPressedThisFrame) SelectItem(1);
+        if (Keyboard.current.digit3Key.wasPressedThisFrame) SelectItem(2);
+        if (Keyboard.current.digit4Key.wasPressedThisFrame) SelectItem(3);
+        if (Keyboard.current.digit5Key.wasPressedThisFrame) SelectItem(4);
+    }
+
+    public void OnSelectItem(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        int key = (int)context.ReadValue<float>() - 1;
+        if (key >= 0 && key < slots.Length)
+        {
+            SelectItem(key);
+        }
     }
 
     // PlayerController 먼저 수정
@@ -72,6 +95,8 @@ public class UIInventory : MonoBehaviour
                 slot.quantity++;
                 UpdateUI();
                 CharacterManager.Instance.Player.itemData = null;
+
+                SelectItem(selectedIndex);
                 return;
             }
         }
@@ -84,6 +109,8 @@ public class UIInventory : MonoBehaviour
             emptySlot.quantity = 1;
             UpdateUI();
             CharacterManager.Instance.Player.itemData = null;
+
+            SelectItem(selectedIndex);
             return;
         }
 
@@ -140,6 +167,14 @@ public class UIInventory : MonoBehaviour
     // ItemSlot 스크립트 먼저 수정
     public void SelectItem(int index)
     {
+        selectedIndex = index;
+        
+        foreach (ItemSlot slot in slots)
+        {
+            slot.outline.enabled = false;
+        }
+        slots[selectedIndex].outline.enabled = true;
+
         if (slots[index].item == null) return;
 
         selectedItem = slots[index];
@@ -197,6 +232,10 @@ public class UIInventory : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Performed && canDrop)
         {
+            SelectItem(selectedIndex);
+
+            if (selectedItem.item == null) return;
+
             ThrowItem(selectedItem.item);
             RemoveSelctedItem();
         }

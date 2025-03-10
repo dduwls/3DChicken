@@ -85,7 +85,9 @@ public class PlayerController : MonoBehaviour
     {
         if(context.phase == InputActionPhase.Started && IsGrounded())
         {
-            rb.AddForce(Vector2.up * jumpPower, ForceMode.Impulse);
+            PlayerCondition condition = CharacterManager.Instance.Player.condition;
+
+            rb.AddForce(Vector2.up * (jumpPower + condition.JumpBoost), ForceMode.Impulse);
             animator.SetTrigger("jump");
         }
     }

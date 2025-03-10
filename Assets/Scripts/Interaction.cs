@@ -13,7 +13,6 @@ public class Interaction : MonoBehaviour
 
     public GameObject curInteractGameObject;
     private IInteractable curInteractable;
-    private IInteractable prevInteractable;
 
     private Camera cam;
     private bool isInteract;
@@ -45,12 +44,13 @@ public class Interaction : MonoBehaviour
             }
             else
             {
-                prevInteractable?.HidePromptText();
+                if (curInteractable != null && curInteractGameObject != null)
+                {
+                    curInteractable.HidePromptText();
+                }
                 
                 curInteractGameObject = null;
                 curInteractable = null;
-
-                prevInteractable = null;
             }
         }
     }
@@ -69,8 +69,6 @@ public class Interaction : MonoBehaviour
             curInteractable.OnInteract();
             curInteractGameObject = null;
             curInteractable = null;
-            
-            prevInteractable = null;
         }
     }
 }

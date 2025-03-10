@@ -59,6 +59,7 @@ MonoBehaviour:
   button: {fileID: 7289599232429592339}
   icon: {fileID: 8786896731443540821}
   quatityText: {fileID: 3229224191429419934}
+  outline: {fileID: 6864220294884316467}
   index: 0
   equipped: 0
   quantity: 0
@@ -83,7 +84,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.19607843}
+  m_Color: {r: 0.27450982, g: 0.27450982, b: 0.27450982, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
