@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -45,6 +46,10 @@ public class UIInventory : MonoBehaviour
             slots[i].Clear();
         }
 
+        selectedItemStat.transform.parent.gameObject.SetActive(false);
+
+        selectedItemStat.text = string.Empty;
+
         ClearSelectedItemWindow();
 
         SelectItem(0);
@@ -55,9 +60,16 @@ public class UIInventory : MonoBehaviour
         selectedItem = null;
 
         selectedItemText.transform.parent.gameObject.SetActive(false);
-        selectedItemStat.transform.parent.gameObject.SetActive(false);
 
         selectedItemText.text = string.Empty;
+
+        Invoke("StatOff", 1f);
+    }
+
+    void StatOff() 
+    {
+        selectedItemStat.transform.parent.gameObject.SetActive(false);
+
         selectedItemStat.text = string.Empty;
     }
 
@@ -160,7 +172,7 @@ public class UIInventory : MonoBehaviour
     // Player 스크립트 먼저 수정
     public void ThrowItem(ItemData data)
     {
-        Instantiate(data.dropPrefab, dropPosition.position, Quaternion.Euler(Vector3.one * Random.value * 360));
+        Instantiate(data.dropPrefab, dropPosition.position, Quaternion.Euler(Vector3.one * UnityEngine.Random.value * 360));
     }
 
 
@@ -185,13 +197,6 @@ public class UIInventory : MonoBehaviour
 
         selectedItemStat.text = string.Empty;
 
-        selectedItemStat.transform.parent.gameObject.SetActive(true);
-
-        for (int i = 0; i < selectedItem.item.consumables.Length; i++)
-        {
-            selectedItemStat.text += $"{selectedItem.item.consumables[i].type}<color=#fffa><font=\"NEXON Lv1 Gothic OTF SDF\"> +{selectedItem.item.consumables[i].value}</font></color>" + "\n";
-        }
-
         canUse = selectedItem.item.type == ItemType.Consumable;
         canEquip = selectedItem.item.type == ItemType.Equipable && !slots[index].equipped;
         canUnEquip = selectedItem.item.type == ItemType.Equipable && slots[index].equipped;
@@ -215,6 +220,14 @@ public class UIInventory : MonoBehaviour
                             condition.BoostJumpPower(selectedItem.item.consumables[i].value, 10f); break;
                     }
                 }
+
+                selectedItemStat.transform.parent.gameObject.SetActive(true);
+
+                for (int i = 0; i < selectedItem.item.consumables.Length; i++)
+                {
+                    selectedItemStat.text += $"{selectedItem.item.consumables[i].type}<color=#fffa><font=\"NEXON Lv1 Gothic OTF SDF\"> +{selectedItem.item.consumables[i].value}</font></color>" + "\n";
+                }
+
                 RemoveSelctedItem();
             }
             else if (canEquip)
@@ -253,10 +266,20 @@ public class UIInventory : MonoBehaviour
             }
 
             selectedItem.item = null;
-            ClearSelectedItemWindow();
+        }
+        else
+        {
+            Invoke("SelectItem", 1f);
         }
 
+        ClearSelectedItemWindow();
+
         UpdateUI();
+    }
+
+    void SelectItem()
+    {
+        SelectItem(selectedIndex);
     }
 
     public bool HasItem(ItemData item, int quantity)

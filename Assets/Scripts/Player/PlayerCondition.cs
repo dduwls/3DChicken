@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEditor.SearchService;
+using UnityEngine.SceneManagement;
 
 public interface IDamagable
 {
@@ -25,7 +27,9 @@ public class PlayerCondition : MonoBehaviour, IDamagable
 
     private void Update()
     {
-        if (health.curValue < 0f)
+        health.Subtract(health.passiveValue * Time.deltaTime);
+
+        if (health.curValue <= 0f)
         {
             Die();
         }
@@ -58,7 +62,7 @@ public class PlayerCondition : MonoBehaviour, IDamagable
 
     public void Die()
     {
-        Debug.Log("플레이어가 죽었다.");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void TakePhysicalDamage(int damageAmount)
